@@ -1,17 +1,76 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+  <link rel = "stylesheet" href="index.css">
   </head>
   <body>
     <p>
-      <button onclick="anim3();">weeeeeee</button>   
+      <button onclick="anim3();">Start Cube</button>   
     </p> 
-  
+    <div class = "float_container">
+      <div class = "float_child">
+        <div class="slidecontainer">
+          x value
+          <input type="range" min="0" max="628" value="314" class="slider" id="arange">
+        </div>
+        <div class="slidecontainer">
+          y value
+          <input type="range" min="0" max="628" value="114" class="slider" id="brange">
+        </div>
+        <div class="slidecontainer">
+          z value
+          <input type="range" min="0" max="628" value="3" class="slider" id="crange">
+        </div>
+      </div>
+    <div class = "float_child">
+      <div class="slidecontainer">
+        x rot speed
+        <input type="range" min="0" max="20" value="10" class="slider" id="arot">
+      </div>
+      <div class="slidecontainer">
+        y rot speed
+        <input type="range" min="0" max="20" value="10" class="slider" id="brot">
+      </div>
+      <div class="slidecontainer">
+        z rot speed
+        <input type="range" min="0" max="20" value="10" class="slider" id="crot">
+      </div>
+    </div>
+  </div>
 
     <pre id="d" style="background-color:#000; color:#ccc; font-size: 10pt;"> </pre>
                                                                                                 
     
     <script>
+      var a = 3.14, b = 1.14, c = 0.3;
+      var arot = 0.1, brot = 0.1, crot = 0.1;
+      slider_a = document.getElementById("arange");
+      slider_b = document.getElementById("brange");
+      slider_c = document.getElementById("crange");
+      slider_a.oninput = function() {
+        a = this.value/100
+      
+      }
+      slider_b.oninput = function() {
+        b = this.value/100
+      }
+      slider_c.oninput = function() {
+        c = this.value/100
+      }
+      slider_arot = document.getElementById("arot");
+      slider_brot = document.getElementById("brot");
+      slider_crot = document.getElementById("crot");
+      slider_arot.oninput = function() {
+        arot = this.value/100
+      }
+      slider_brot.oninput = function() {
+        console.log(brot)
+        brot = this.value/100
+      }
+      slider_crot.oninput = function() {
+        crot = this.value/100
+      }
+
       var bar=[];
       var zoo=[];
       (function() {       
@@ -21,10 +80,8 @@
         var squaretag = document.getElementById('square')
         var tmr1 = undefined, tmr2 = undefined;
         var tmr3 = undefined;
-        var A=-0, B=0;
-        var a = 1.1, b = -0.5, c = 4.0;
+        var A=0, B=0;
         var light_vector = [0,0,1]
-
 
         var squareframe=function(){
 
@@ -32,8 +89,15 @@
           bar[k]=k%80 == 79 ? "\n" : " ";
           zoo[k]=0;
         };
-        b -= 0.2;
-        c += 0.1;
+        a += arot;
+        b += brot;
+        c += crot;
+        slider_a.value = a*100;
+        slider_b.value = b*100;
+        slider_c.value = c*100;
+        a = (a>6.28 ? 0:a)
+        b = (b>6.28 ? 0:b)
+        c = (c>6.28 ? 0:c)
         var x = [1,0,0];
         var y = [0,1,0];  
         var z = [0,0,1];

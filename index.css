@@ -1,0 +1,8 @@
+.float_container {
+    height: 70px;
+}
+
+.float_child {
+    width: 50%;
+    float: left;
+} 
