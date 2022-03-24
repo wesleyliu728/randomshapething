@@ -35,6 +35,10 @@
         z rot speed
         <input type="range" min="0" max="20" value="10" class="slider" id="crot">
       </div>
+      <div class="slidecontainer">
+        side length
+        <input type="range" min="0" max="400" value="100" class="slider" id="len">
+      </div>
     </div>
   </div>
 
@@ -44,6 +48,7 @@
     <script>
       var a = 3.14, b = 1.14, c = 0.3;
       var arot = 0.1, brot = 0.1, crot = 0.1;
+      var length = 1;
       slider_a = document.getElementById("arange");
       slider_b = document.getElementById("brange");
       slider_c = document.getElementById("crange");
@@ -70,7 +75,10 @@
       slider_crot.oninput = function() {
         crot = this.value/100
       }
-
+      slider_len = document.getElementById("len");
+      slider_len.oninput = function() {
+        length = this.value/100
+      }
       var bar=[];
       var zoo=[];
       (function() {       
@@ -92,15 +100,17 @@
         a += arot;
         b += brot;
         c += crot;
+        var shift = [-0.5,-0.5,-0.5]
         slider_a.value = a*100;
         slider_b.value = b*100;
         slider_c.value = c*100;
         a = (a>6.28 ? 0:a)
         b = (b>6.28 ? 0:b)
         c = (c>6.28 ? 0:c)
-        var x = [1,0,0];
-        var y = [0,1,0];  
-        var z = [0,0,1];
+
+        var x = [length,0,0];
+        var y = [0,length,0];  
+        var z = [0,0,length];
         
         var cA = Math.cos(a), sA = Math.sin(a),
         cB = Math.cos(b), sB = Math.sin(b),
@@ -108,13 +118,16 @@
         x = calc(x)
         y = calc(y)
         z = calc(z)
+
         
-        
-        for(var j = 0; j<=1; j+= 0.05){
+        plotter2(x,y,z,length)
+        pretag.innerHTML = bar.join("");
+function plotter1(x,y,z, length){
+  for(var j = 0; j<=length; j+= 0.05){
           x1 = vectorMult(x, j)
           y1 = vectorMult(y, j)
           z1 = vectorMult(z, j)
-          for(var i = 0; i<=1; i+= 0.05){
+          for(var i = 0; i<=length; i+= 0.05){
             xprime = vectorMult(x,i)
             yprime = vectorMult(y,i)
             zprime = vectorMult(z,i)
@@ -130,18 +143,85 @@
             plot(vectorSum2(y,z1,xprime), vectorMult(y,-1))
             plot(vectorSum2(z,x1,yprime), vectorMult(z,-1)) 
             plot(vectorSum2(z,y1,xprime), vectorMult(z,-1))
+            
           }
 
         }
-        pretag.innerHTML = bar.join("");
-function calc(arr){
+}
+function plotter2(x, y, z, length){
+  xhalf = vectorMult(x, 0.5);
+  yhalf = vectorMult(y, 0.5);
+  zhalf = vectorMult(z, 0.5);
+  xhalf2 = vectorMult(x, -0.5);
+  yhalf2 = vectorMult(y, -0.5);
+  zhalf2 = vectorMult(z, -0.5);
+  for(var j = 0; j<=0.5; j+= 0.05){
+          x1 = vectorMult(x, j)
+          y1 = vectorMult(y, j)
+          z1 = vectorMult(z, j)
+          for(var i = 0; i<=0.5; i+= 0.05){
+            xprime = vectorMult(x,i)
+            yprime = vectorMult(y,i)
+            zprime = vectorMult(z,i)
+            plot(vectorSum2(xhalf,z1,vectorMult(yprime, -1)), vectorMult(x,-1))
+            plot(vectorSum2(xhalf,y1,vectorMult(zprime, -1)), vectorMult(x,-1))
+            plot(vectorSum2(yhalf,x1,vectorMult(zprime, -1)), vectorMult(y,-1)) 
+            plot(vectorSum2(yhalf,z1,vectorMult(xprime, -1)), vectorMult(y,-1))
+            plot(vectorSum2(zhalf,x1,vectorMult(yprime, -1)), vectorMult(z,-1)) 
+            plot(vectorSum2(zhalf,y1,vectorMult(xprime, -1)), vectorMult(z,-1))
+            plot(vectorSum2(xhalf,z1,yprime), vectorMult(x,-1))
+            plot(vectorSum2(xhalf,y1,zprime), vectorMult(x,-1))
+            plot(vectorSum2(yhalf,x1,zprime), vectorMult(y,-1)) 
+            plot(vectorSum2(yhalf,z1,xprime), vectorMult(y,-1))
+            plot(vectorSum2(zhalf,x1,yprime), vectorMult(z,-1)) 
+            plot(vectorSum2(zhalf,y1,xprime), vectorMult(z,-1))
+            plot(vectorSum2(xhalf,vectorMult(z1, -1),vectorMult(yprime, -1)), vectorMult(x,-1))
+            plot(vectorSum2(xhalf,vectorMult(y1, -1),vectorMult(zprime, -1)), vectorMult(x,-1))
+            plot(vectorSum2(yhalf,vectorMult(x1, -1),vectorMult(zprime, -1)), vectorMult(y,-1)) 
+            plot(vectorSum2(yhalf,vectorMult(z1, -1),vectorMult(xprime, -1)), vectorMult(y,-1))
+            plot(vectorSum2(zhalf,vectorMult(x1, -1),vectorMult(yprime, -1)), vectorMult(z,-1)) 
+            plot(vectorSum2(zhalf,vectorMult(y1, -1),vectorMult(xprime, -1)), vectorMult(z,-1))
+            plot(vectorSum2(xhalf,vectorMult(z1, -1),yprime), vectorMult(x,-1))
+            plot(vectorSum2(xhalf,vectorMult(y1, -1),zprime), vectorMult(x,-1))
+            plot(vectorSum2(yhalf,vectorMult(x1, -1),zprime), vectorMult(y,-1)) 
+            plot(vectorSum2(yhalf,vectorMult(z1, -1),xprime), vectorMult(y,-1))
+            plot(vectorSum2(zhalf,vectorMult(x1, -1),yprime), vectorMult(z,-1)) 
+            plot(vectorSum2(zhalf,vectorMult(y1, -1),xprime), vectorMult(z,-1))
 
-          
-var n = [0,0,0]
-n[0] = arr[0] * (cC * cB) + arr[1] * (-sC*cA + cC * sB * sA) + arr[2] * (sC * sA + cC * sB * cA)
-n[1] = arr[0] * (sC * cB) + arr[1] * (cC*cA + sC * sB * sA) + arr[2] * (-cC * sA + sC * sB * cA)
-n[2] = arr[0] * (-sB) + arr[1] * (cB*sA) + arr[2] * (cB*cA)
-return(n)
+            plot(vectorSum2(xhalf2,z1,vectorMult(yprime, -1)), vectorMult(x,1))
+            plot(vectorSum2(xhalf2,y1,vectorMult(zprime, -1)), vectorMult(x,1))
+            plot(vectorSum2(yhalf2,x1,vectorMult(zprime, -1)), vectorMult(y,1)) 
+            plot(vectorSum2(yhalf2,z1,vectorMult(xprime, -1)), vectorMult(y,1))
+            plot(vectorSum2(zhalf2,x1,vectorMult(yprime, -1)), vectorMult(z,1)) 
+            plot(vectorSum2(zhalf2,y1,vectorMult(xprime, -1)), vectorMult(z,1))
+            plot(vectorSum2(xhalf2,z1,yprime), vectorMult(x,1))
+            plot(vectorSum2(xhalf2,y1,zprime), vectorMult(x,1))
+            plot(vectorSum2(yhalf2,x1,zprime), vectorMult(y,1)) 
+            plot(vectorSum2(yhalf2,z1,xprime), vectorMult(y,1))
+            plot(vectorSum2(zhalf2,x1,yprime), vectorMult(z,1)) 
+            plot(vectorSum2(zhalf2,y1,xprime), vectorMult(z,1))
+            plot(vectorSum2(xhalf2,vectorMult(z1, -1),vectorMult(yprime, -1)), vectorMult(x,1))
+            plot(vectorSum2(xhalf2,vectorMult(y1, -1),vectorMult(zprime, -1)), vectorMult(x,1))
+            plot(vectorSum2(yhalf2,vectorMult(x1, -1),vectorMult(zprime, -1)), vectorMult(y,1)) 
+            plot(vectorSum2(yhalf2,vectorMult(z1, -1),vectorMult(xprime, -1)), vectorMult(y,1))
+            plot(vectorSum2(zhalf2,vectorMult(x1, -1),vectorMult(yprime, -1)), vectorMult(z,1)) 
+            plot(vectorSum2(zhalf2,vectorMult(y1, -1),vectorMult(xprime, -1)), vectorMult(z,1))
+            plot(vectorSum2(xhalf2,vectorMult(z1, -1),yprime), vectorMult(x,1))
+            plot(vectorSum2(xhalf2,vectorMult(y1, -1),zprime), vectorMult(x,1))
+            plot(vectorSum2(yhalf2,vectorMult(x1, -1),zprime), vectorMult(y,1)) 
+            plot(vectorSum2(yhalf2,vectorMult(z1, -1),xprime), vectorMult(y,1))
+            plot(vectorSum2(zhalf2,vectorMult(x1, -1),yprime), vectorMult(z,1)) 
+            plot(vectorSum2(zhalf2,vectorMult(y1, -1),xprime), vectorMult(z,1))
+          }
+
+        }
+}
+function calc(arr){        
+  var n = [0,0,0]
+  n[0] = arr[0] * (cC * cB) + arr[1] * (-sC*cA + cC * sB * sA) + arr[2] * (sC * sA + cC * sB * cA)
+  n[1] = arr[0] * (sC * cB) + arr[1] * (cC*cA + sC * sB * sA) + arr[2] * (-cC * sA + sC * sB * cA)
+  n[2] = arr[0] * (-sB) + arr[1] * (cB*sA) + arr[2] * (cB*cA)
+  return(n)
 }
 
 function vectorMult(arr,val){
@@ -149,14 +229,14 @@ function vectorMult(arr,val){
   for(var xee = 0; xee <3; xee++){
     a[xee] = arr[xee] * val
   }
-return(a)
+  return(a)
 }
 function vectorSum(arr1,arr2){
   var a = [0,0,0]
-for(var xy = 0; xy <3; xy++){
-  a[xy] = arr1[xy] + arr2[xy]
-}
-return(a)
+  for(var xy = 0; xy <3; xy++){
+    a[xy] = arr1[xy] + arr2[xy]
+  }
+  return(a)
 }
 function dotProduct(arr1,arr2){
   var curr = 0
@@ -167,10 +247,10 @@ function dotProduct(arr1,arr2){
 }
 function vectorSum2(arr1,arr2,arr3){
   var a = [0,0,0]
-for(var xyz = 0; xyz <3; xyz++){
-  a[xyz] = arr1[xyz] + arr2[xyz] + arr3[xyz]
-}
-return(a)  
+  for(var xyz = 0; xyz <3; xyz++){
+    a[xyz] = arr1[xyz] + arr2[xyz] + arr3[xyz]
+  }
+  return(a)  
 }
 function plot(arr, normal){
   //opp = !opp
@@ -190,8 +270,7 @@ function plot(arr, normal){
 }
 
       }
-        // This is copied, pasted, reformatted, and ported directly from my original
-        // donut.c code
+
       window.anim3 = function() {
         if(tmr3 === undefined) {
           tmr3 = setInterval(squareframe, 50);
